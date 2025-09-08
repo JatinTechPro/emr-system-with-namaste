@@ -1,8 +1,9 @@
 "use client"
 
 import type React from "react"
-
 import { useState } from "react"
+import { useRouter } from "next/navigation"
+import { useAuth } from "@/components/auth-provider"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
@@ -14,24 +15,33 @@ import { Heart, Shield, User, Lock } from "lucide-react"
 import Link from "next/link"
 
 export default function LoginPage() {
+  const { login, isLoading: authIsLoading } = useAuth()
+  const router = useRouter()
   const [isLoading, setIsLoading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
 
   const handleABHALogin = async () => {
     setIsLoading(true)
     // Simulate ABHA OAuth flow
     setTimeout(() => {
       setIsLoading(false)
-      // Redirect to consent page or dashboard
+      router.push("/dashboard")
     }, 2000)
   }
 
-  const handleEmailLogin = async (e: React.FormEvent) => {
+  const handleEmailLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    setIsLoading(true)
-    // Handle email/password login
-    setTimeout(() => {
-      setIsLoading(false)
-    }, 1500)
+    setError(null)
+    const email = (e.currentTarget.elements.namedItem("email") as HTMLInputElement).value
+    const password = (e.currentTarget.elements.namedItem("password") as HTMLInputElement).value
+
+    try {
+      await login(email, password)
+      router.push("/dashboard")
+    } catch (err) {
+      setError("Login failed. Please check your credentials.")
+      console.error(err)
+    }
   }
 
   return (
@@ -74,7 +84,7 @@ export default function LoginPage() {
                   <p className="text-sm text-muted-foreground mb-6">
                     Sign in securely using your Ayushman Bharat Health Account (ABHA) ID
                   </p>
-                  <Button onClick={handleABHALogin} disabled={isLoading} className="w-full" size="lg">
+                  <Button onClick={handleABHALogin} disabled={isLoading || authIsLoading} className="w-full" size="lg">
                     {isLoading ? "Connecting..." : "Sign in with ABHA ID"}
                   </Button>
                 </div>
@@ -84,19 +94,20 @@ export default function LoginPage() {
                 <form onSubmit={handleEmailLogin} className="space-y-4">
                   <div className="space-y-2">
                     <Label htmlFor="email">Email Address</Label>
-                    <Input id="email" type="email" placeholder="doctor@hospital.com" required />
+                    <Input id="email" name="email" type="email" placeholder="doctor@hospital.com" required />
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor="password">Password</Label>
-                    <Input id="password" type="password" required />
+                    <Input id="password" name="password" type="password" required />
                   </div>
+                  {error && <p className="text-sm text-red-500">{error}</p>}
                   <div className="flex items-center justify-between text-sm">
                     <Link href="/auth/forgot-password" className="text-primary hover:underline">
                       Forgot password?
                     </Link>
                   </div>
-                  <Button type="submit" disabled={isLoading} className="w-full" size="lg">
-                    {isLoading ? "Signing in..." : "Sign In"}
+                  <Button type="submit" disabled={authIsLoading} className="w-full" size="lg">
+                    {authIsLoading ? "Signing in..." : "Sign In"}
                   </Button>
                 </form>
               </TabsContent>

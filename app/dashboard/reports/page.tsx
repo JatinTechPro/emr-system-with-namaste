@@ -7,7 +7,6 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Badge } from "@/components/ui/badge"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import { DashboardNav } from "@/components/dashboard-nav"
 import {
   BarChart,
   Bar,
@@ -95,8 +94,6 @@ export default function ReportsPage() {
 
   return (
     <div className="min-h-screen bg-background">
-      <DashboardNav currentPage="reports" />
-
       <div className="container mx-auto px-4 py-8">
         <div className="flex items-center justify-between mb-8">
           <div>

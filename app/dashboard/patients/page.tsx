@@ -7,7 +7,6 @@ import { Input } from "@/components/ui/input"
 import { Badge } from "@/components/ui/badge"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { DashboardNav } from "@/components/dashboard-nav"
 import { Search, Plus, Filter, Calendar, Phone, FileText } from "lucide-react"
 import Link from "next/link"
 
@@ -82,8 +81,6 @@ export default function PatientsPage() {
 
   return (
     <div className="min-h-screen bg-background">
-      <DashboardNav currentPage="patients" />
-
       <div className="container mx-auto px-4 py-8">
         <div className="flex items-center justify-between mb-8">
           <div>

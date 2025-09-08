@@ -21,7 +21,6 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog"
-import { DashboardNav } from "@/components/dashboard-nav"
 import {
   Settings,
   Users,
@@ -217,8 +216,6 @@ export default function AdminPage() {
 
   return (
     <div className="min-h-screen bg-background">
-      <DashboardNav currentPage="admin" />
-
       <div className="container mx-auto px-4 py-8">
         <div className="flex items-center justify-between mb-8">
           <div>
