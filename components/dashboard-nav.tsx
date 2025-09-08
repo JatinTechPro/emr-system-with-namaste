@@ -1,4 +1,4 @@
-"use client"
+'use client'
 
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
@@ -21,7 +21,7 @@ interface DashboardNavProps {
 }
 
 export function DashboardNav({ currentPage = "dashboard" }: DashboardNavProps) {
-  const { user, logout } = useAuth()
+  const { user, logout, isLoading } = useAuth()
   const [notifications] = useState(3)
 
   const navItems = [
@@ -32,6 +32,10 @@ export function DashboardNav({ currentPage = "dashboard" }: DashboardNavProps) {
     { id: "admin", label: "Admin", icon: Settings, href: "/dashboard/admin" },
     { id: "developer", label: "API", icon: Code, href: "/dashboard/developer" },
   ]
+
+  if (isLoading) {
+    return null; // Don't render anything while loading auth state
+  }
 
   return (
     <nav className="border-b border-border bg-card/50 backdrop-blur-sm sticky top-0 z-50">
@@ -60,7 +64,6 @@ export function DashboardNav({ currentPage = "dashboard" }: DashboardNavProps) {
           </div>
 
           <div className="flex items-center gap-3">
-            {/* Notifications */}
             <Button variant="ghost" size="sm" className="relative">
               <Bell className="h-4 w-4" />
               {notifications > 0 && (
@@ -70,45 +73,11 @@ export function DashboardNav({ currentPage = "dashboard" }: DashboardNavProps) {
               )}
             </Button>
 
-            {/* User Menu */}
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="ghost" className="flex items-center gap-2">
-                  <Avatar className="h-8 w-8">
-                    <AvatarImage src="/placeholder.svg?height=32&width=32" />
-                    <AvatarFallback>
-                      {user?.name
-                        ?.split(" ")
-                        .map((n) => n[0])
-                        .join("") || "U"}
-                    </AvatarFallback>
-                  </Avatar>
-                  <div className="hidden md:block text-left">
-                    <div className="text-sm font-medium">{user?.name || "User"}</div>
-                    <div className="text-xs text-muted-foreground capitalize">{user?.role || "Role"}</div>
-                  </div>
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="w-56">
-                <DropdownMenuLabel>My Account</DropdownMenuLabel>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem>
-                  <Settings className="mr-2 h-4 w-4" />
-                  Settings
-                </DropdownMenuItem>
-                <DropdownMenuItem>
-                  <FileText className="mr-2 h-4 w-4" />
-                  My Profile
-                </DropdownMenuItem>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem onClick={logout} className="text-red-600">
-                  <LogOut className="mr-2 h-4 w-4" />
-                  Sign Out
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
+            <Button onClick={logout} variant="outline" size="sm">
+                <LogOut className="mr-2 h-4 w-4" />
+                Sign Out
+            </Button>
 
-            {/* Mobile Menu */}
             <Button variant="ghost" size="sm" className="md:hidden">
               <Menu className="h-4 w-4" />
             </Button>
